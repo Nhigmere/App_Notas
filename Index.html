@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Notas</title>
+    <link rel="stylesheet" href="estilos.css">
+    <!-- Iconos de Font Awesome para botones y elementos visuales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<!-- Body ocupa toda la pantalla sin márgenes ni relleno -->
+<body>
+    <!-- Contenedor principal que ocupa toda la pantalla -->
+    <div class="contenedor-principal">
+        <!-- Barra lateral izquierda con logo y botones de puntos -->
+        <aside class="barra-lateral">
+            <!-- Logo de la aplicación -->
+            <div class="logo">Docket</div>
+            
+            <!-- Botón para agregar una nueva nota -->
+            <button class="boton-agregar-nota" id="botonAgregarNota">
+                <i class="fas fa-plus"></i>
+            </button>
+            
+            <!-- Contenedor para los puntos de colores (uno por cada nota) -->
+            <div class="contenedor-puntos-notas" id="contenedorPuntosNotas">
+            </div>
+        </aside>
+
+        <!-- Contenido principal: título y grid de notas -->
+        <main class="contenido-principal">
+            <!-- Título de la sección -->
+            <h1 class="titulo-seccion">Notas</h1>
+
+            <!-- Grid donde se mostrarán todas las notas creadas -->
+            <div class="grid-notas" id="gridNotas">
+            </div>
+        </main>
+    </div>
+
+    <!-- Script principal que controla toda la lógica de la aplicación -->
+    <script src="estilos.js"></script>
+</body>
+</html>

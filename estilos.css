@@ -1,0 +1,519 @@
+/* ========== VARIABLES CSS: Colores, tamaños y estilos reutilizables ========== */
+:root {
+    /* Colores de fondo y texto */
+    --color-fondo: #f8f8f8;
+    --color-fondo-barra-lateral: #ffffff;
+    --color-texto: #333;
+    --color-texto-claro: #666;
+    --color-borde: #eee;
+}
+
+/* ========== ESTILOS GENERALES DEL CUERPO ========== */
+* {
+    /* Eliminamos márgenes y relleno por defecto en todos los elementos */
+    margin: 0;
+    padding: 0;
+    /* border-box asegura que el padding y border se incluyen en el ancho/alto */
+    box-sizing: border-box;
+}
+
+body {
+    /* Fuente moderna y clara */
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    /* Colores de texto y fondo */
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    /* Ocupa toda la altura de la pantalla sin barras de desplazamiento no deseadas */
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ========== CONTENEDOR PRINCIPAL (Diseño Flexbox) ========== */
+.contenedor-principal {
+    /* Flexbox en fila: barra lateral a la izquierda, contenido a la derecha */
+    display: flex;
+    /* Ocupa toda la pantalla */
+    width: 100%;
+    height: 100vh;
+    /* Fondo blanco para los contenedores */
+    background-color: #fff;
+}
+
+
+/* ========== BARRA LATERAL ========== */
+.barra-lateral {
+    /* Ancho fijo para la barra lateral */
+    width: 250px;
+    /* Color de fondo y borde */
+    background-color: var(--color-fondo-barra-lateral);
+    border-right: 1px solid var(--color-borde);
+    /* Relleno interior */
+    padding: 30px 20px;
+    /* Flexbox vertical: elementos apilados verticalmente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Posicionamiento relativo para los puntos dentro de ella */
+    position: relative;
+}
+
+/* Logo de la aplicación */
+.logo {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: var(--color-texto);
+}
+
+/* Botón para agregar una nueva nota */
+.boton-agregar-nota {
+    /* Estilo circular: radio del 50% de ancho/alto */
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.8em;
+    /* Centramos el contenido (icono) dentro del botón */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Efecto visual y transición suave */
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    margin-bottom: 50px;
+}
+
+/* Efecto hover: el botón se levanta un poco */
+.boton-agregar-nota:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Contenedor de los puntos de notas */
+.contenedor-puntos-notas {
+    /* Flexbox vertical para apilar los puntos con sus títulos */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Posicionamiento absoluto dentro de la barra lateral */
+    position: absolute;
+    left: 20px;
+    top: 200px;
+    /* Permitir que sea desplazable si hay muchas notas */
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Contenedor para cada punto + título */
+.item-punto-nota {
+    /* Flexbox horizontal: punto + título lado a lado */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Permitir que el contenedor sea interactivo */
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Efecto hover en el contenedor del punto */
+.item-punto-nota:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para cada punto individual */
+.punto-nota {
+    /* Puntos pequeños y redondos */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    /* Transición suave para animaciones */
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Evitar que se redimensione */
+    flex-shrink: 0;
+}
+
+/* Etiqueta con el título del punto */
+.etiqueta-titulo-punto {
+    /* Texto pequeño y legible */
+    font-size: 0.75em;
+    color: var(--color-texto-claro);
+    /* Permitir que el texto se trunce si es muy largo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Máximo ancho para no ocupar toda la barra */
+    max-width: 140px;
+    /* Sin selección de texto */
+    user-select: none;
+}
+
+/* Estilos para items de puntos favoritos */
+.item-punto-nota.es-favorito .punto-nota {
+    /* Cuando es favorito, mostramos una estrella */
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 2px 6px rgba(255, 193, 7, 0.4);
+}
+
+.item-punto-nota.es-favorito .punto-nota::before {
+    /* Agregamos una estrella visual mediante pseudoelemento */
+    content: '★';
+    font-size: 0.9em;
+    position: absolute;
+    color: #ffc107;
+}
+
+/* Animación "pop" cuando aparece un nuevo punto */
+.punto-nota.animacion-pop {
+    animation: saltar-punto 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+/* Animación de desvanecimiento cuando se elimina */
+.punto-nota.desvanecer {
+    animation: desvanecimiento 0.3s ease-out forwards;
+}
+
+/* Definición de la animación "pop" (salta y aparece) */
+@keyframes saltar-punto {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* ========== CONTENIDO PRINCIPAL ========== */
+.contenido-principal {
+    /* Ocupa todo el espacio restante (flex-grow: 1) */
+    flex-grow: 1;
+    /* Relleno interior */
+    padding: 30px 40px;
+    /* Flexbox vertical para organizar título y grid */
+    display: flex;
+    flex-direction: column;
+    /* Permite que el contenido sea desplazable si es necesario */
+    overflow-y: auto;
+}
+
+/* Título de la sección */
+.titulo-seccion {
+    font-size: 3.5em;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: var(--color-texto);
+}
+
+/* ========== GRID DE NOTAS ========== */
+.grid-notas {
+    /* Grid con cuadrados proporcionados */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    /* Ocupa todo el espacio disponible */
+    flex-grow: 1;
+    /* Permite desplazamiento vertical si hay muchas notas */
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* ========== TARJETAS DE NOTAS ========== */
+.tarjeta-nota {
+    /* Color de fondo por defecto (se sobrescribe con JavaScript) */
+    background-color: #fdd835;
+    /* Esquinas ligeramente redondeadas para estilo minimalista */
+    border-radius: 8px;
+    /* Relleno interior compacto */
+    padding: 12px;
+    /* Sombra muy suave para efecto minimalista */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Transiciones suaves para efectos hover */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.3s ease-out;
+    /* Cursor de puntero para indicar que es interactiva */
+    cursor: pointer;
+    /* Dimensiones cuadradas */
+    min-height: 220px;
+    max-height: 220px;
+    aspect-ratio: 1 / 1;
+    /* Flexbox vertical para organizar contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    /* Permitir que el contenido sea desplazable si es muy largo */
+    overflow-y: auto;
+}
+
+/* Efecto hover: la tarjeta se levanta levemente */
+.tarjeta-nota:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la nota (encabezado h4) */
+.titulo-nota {
+    /* Tamaño compacto para minimalismo */
+    font-size: 0.9em;
+    margin-top: 0;
+    margin-bottom: 6px;
+    color: #333;
+    /* Sin contorno ni borde cuando se edita */
+    outline: none;
+    border: none;
+    font-weight: 700;
+    /* Permitir que el texto se divida si es muy largo */
+    word-wrap: break-word;
+}
+
+/* Cuando el título está enfocado (siendo editado) */
+.titulo-nota:focus {
+    /* Sin estilos especiales - mantener limpio */
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+/* Lista desordenada dentro de las tarjetas (para los puntos) */
+.tarjeta-nota ul {
+    /* Márgenes y relleno pequeños */
+    margin: 0;
+    padding-left: 18px;
+    /* Estilos de lista */
+    list-style-type: disc;
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: #555;
+}
+
+/* Elementos de lista */
+.tarjeta-nota li {
+    /* Separación entre puntos */
+    margin-bottom: 6px;
+    /* Permitir que sea editable */
+    outline: none;
+    word-wrap: break-word;
+}
+
+/* Párrafos editables dentro de las tarjetas (por si se usan) */
+.tarjeta-nota p {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: #555;
+    /* Permitir que sea editable en línea */
+    outline: none;
+    margin: 0;
+}
+
+/* Lista editable dentro de las tarjetas de notas */
+.lista-nota {
+    /* Estilos de lista con viñetas/puntos prominentes y VISIBLES */
+    list-style-type: disc;
+    list-style-position: outside;
+    /* Márgenes y relleno para mejor visualización - centrado */
+    margin: 4px 0;
+    padding-left: 16px;
+    /* Tipografía clara y legible */
+    font-size: 0.85em;
+    line-height: 1.8;
+    color: #555;
+    /* Asegurar que los estilos de lista se apliquen incluso con contenteditable */
+    display: block;
+}
+
+/* Items individuales de la lista */
+.lista-nota li {
+    /* Separación generosa entre puntos para mejor legibilidad */
+    margin-bottom: 8px;
+    /* Sin contorno cuando está en modo edición */
+    outline: none;
+    /* Permitir que el texto se divida en múltiples líneas */
+    word-wrap: break-word;
+    /* Cursor de texto para edición */
+    cursor: text;
+    /* Altura mínima para que sea más fácil hacer clic */
+    min-height: 1.4em;
+    /* Asegurar que el elemento se renderiza como list-item */
+    display: list-item;
+}
+
+/* Viñeta/punto personalizado - para mejor visualización */
+.lista-nota li::marker {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em;
+    content: "• ";
+}
+
+/* Estilos cuando la lista está siendo editada (contenteditable) */
+.lista-nota[contenteditable="true"] {
+    /* Sin bordes ni contornos - diseño limpio */
+    border: none;
+    outline: none;
+    border-radius: 0;
+    /* Sin padding adicional */
+    padding: 0;
+    /* Cursor de texto para indicar que se puede editar */
+    cursor: text;
+    /* Forzar que mantenga el display block */
+    display: block;
+}
+/* ========== CONTENEDOR DE BOTONES EN LAS TARJETAS ========== */
+.contenedor-botones-tarjeta {
+    /* Posicionamiento absoluto en la esquina superior derecha */
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    /* Flexbox para alinear los botones horizontalmente */
+    display: flex;
+    gap: 4px;
+    /* Z-index para que aparezca sobre el contenido */
+    z-index: 10;
+}
+
+/* ========== BOTÓN DE FAVORITOS ========== */
+.boton-favorito {
+    /* Estilo del botón muy discreto y transparente */
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 1.1em;
+    color: #ffc107;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+    /* Sin outline al hacer clic */
+    outline: none;
+}
+
+/* Efecto hover en el botón de favoritos */
+.boton-favorito:hover {
+    color: #ffb300;
+    transform: scale(1.15);
+}
+
+/* Efecto cuando está activo (es favorito) */
+.boton-favorito.activo {
+    color: #ffc107;
+}
+
+/* Botón de eliminar - estilos mejorados y más discretos */
+.boton-eliminar-nota {
+    /* Estilo del botón muy discreto */
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 1.1em;
+    color: #d32f2f;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+    /* Z-index para que aparezca sobre el contenido */
+    z-index: 10;
+    outline: none;
+}
+
+/* Efecto hover en el botón de eliminar */
+.boton-eliminar-nota:hover {
+    color: #b71c1c;
+    transform: scale(1.15);
+}
+
+/* ========== FECHA DE CREACIÓN DE LA NOTA ========== */
+.fecha-nota {
+    /* Posición en la esquina inferior izquierda */
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    /* Tipografía pequeña y discreta */
+    font-size: 0.7em;
+    color: rgba(0, 0, 0, 0.4);
+    /* Sin interacción */
+    pointer-events: none;
+}
+
+/* ========== CLASE PARA NOTAS FAVORITAS ========== */
+.tarjeta-nota.es-favorito {
+    /* Se puede agregar un efecto visual sutil para notas favoritas si lo deseas */
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+}
+
+/* Animación de entrada para nuevas tarjetas */
+.tarjeta-nota.animacion-deslizizar-entrada {
+    animation: deslizar-entrada 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Animación de desvanecimiento cuando se elimina una tarjeta */
+.tarjeta-nota.desvanecer {
+    animation: desvanecimiento 0.3s ease-out forwards;
+}
+
+/* Definición de la animación de deslizamiento de entrada */
+@keyframes deslizar-entrada {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Definición de la animación de desvanecimiento */
+@keyframes desvanecimiento {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* ========== BARRA DE DESPLAZAMIENTO PERSONALIZADA ========== */
+/* Ancho del scrollbar */
+.grid-notas::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track del scrollbar (el fondo) */
+.grid-notas::-webkit-scrollbar-track {
+    background: var(--color-fondo);
+    border-radius: 10px;
+}
+
+/* Thumb del scrollbar (la parte que se arrastra) */
+.grid-notas::-webkit-scrollbar-thumb {
+    background: #d0d0d0;
+    border-radius: 10px;
+}
+
+/* Efecto hover en el thumb del scrollbar */
+.grid-notas::-webkit-scrollbar-thumb:hover {
+    background: #b0b0b0;
+}
